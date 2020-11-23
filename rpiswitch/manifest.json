@@ -1,7 +1,7 @@
 {
   "domain": "rpiswitch",
-  "name": "Control relays and read power usage using ADS1115 ADC chip and TA12-100 current sensor",
-  "documentation": "https://github.com/user/mkbodanu4",
+  "name": "Home Assistant custom component that allows to control relays, connected directly to Raspberry Pi and measure power usage with ADS1115 ADC and TA12-100 Current Sensor",
+  "documentation": "https://github.com/mkbodanu4/RPiSwitch",
   "requirements": ["adafruit-circuitpython-ads1x15>=2.2.3", "numpy>=1.19.4"],
   "dependencies": [],
   "codeowners": [
