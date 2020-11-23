@@ -1,0 +1,10 @@
+{
+  "domain": "rpiswitch",
+  "name": "Control relays and read power usage using ADS1115 ADC chip and TA12-100 current sensor",
+  "documentation": "https://github.com/user/mkbodanu4",
+  "requirements": ["adafruit-circuitpython-ads1x15>=2.2.3", "numpy>=1.19.4"],
+  "dependencies": [],
+  "codeowners": [
+    "@mkbodanu4"
+  ]
+}

@@ -1,0 +1,67 @@
+switch:
+  - platform: rpiswitch
+    scan_interval: 5
+    pin: 17
+    channel: 3
+    name: "Room Light Switch"
+    voltage: 225
+    samples: 100
+    gain: 1
+    pf: 0.6
+
+  - platform: rpiswitch
+    scan_interval: 5
+    pin: 18
+    channel: 1
+    name: "Corridor Light Switch"
+    voltage: 225
+    samples: 100
+    gain: 1
+    pf: 0.6
+
+  - platform: rpiswitch
+    scan_interval: 5
+    pin: 22
+    channel: 0
+    name: "Kitchen Light Switch"
+    voltage: 225
+    samples: 100
+    gain: 1
+    pf: 0.6
+
+sensor:
+  - platform: template
+    sensors:
+      room_light_switch_power:
+        friendly_name: "Room light"
+        unit_of_measurement: 'W'
+        value_template: >
+          {% if states.switch.room_light_switch.attributes.current_power_w %}
+            {{ state_attr('switch.room_light_switch', 'current_power_w') }}
+          {% else %}
+            0
+          {% endif %}
+
+  - platform: template
+    sensors:
+      corridor_light_switch_power:
+        friendly_name: "Corridor light"
+        unit_of_measurement: 'W'
+        value_template: >
+          {% if states.switch.corridor_light_switch.attributes.current_power_w %}
+            {{ state_attr('switch.corridor_light_switch', 'current_power_w') }}
+          {% else %}
+            0
+          {% endif %}
+
+  - platform: template
+    sensors:
+      kitchen_light_switch_power:
+        friendly_name: "Kitchen light"
+        unit_of_measurement: 'W'
+        value_template: >
+          {% if states.switch.kitchen_light_switch.attributes.current_power_w %}
+            {{ state_attr('switch.kitchen_light_switch', 'current_power_w') }}
+          {% else %}
+            0
+          {% endif %}
