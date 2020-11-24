@@ -2,7 +2,7 @@
   "domain": "rpiswitch",
   "name": "Home Assistant custom component that allows to control relays, connected directly to Raspberry Pi and measure power usage with ADS1115 ADC and TA12-100 Current Sensor",
   "documentation": "https://github.com/mkbodanu4/RPiSwitch",
-  "requirements": ["adafruit-circuitpython-ads1x15>=2.2.3", "numpy>=1.19.4"],
+  "requirements": ["adafruit-circuitpython-ads1x15>=2.2.3", "numpy>=1.19.4", "RPi.GPIO>=0.7.0"],
   "dependencies": [],
   "codeowners": [
     "@mkbodanu4"
