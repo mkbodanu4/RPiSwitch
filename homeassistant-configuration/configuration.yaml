@@ -1,6 +1,6 @@
 switch:
   - platform: rpiswitch
-    scan_interval: 5
+    scan_interval: 10
     pin: 17
     channel: 3
     name: "Room Light Switch"
@@ -8,26 +8,25 @@ switch:
     samples: 100
     gain: 1
     pf: 0.6
+    invert_logic: false
 
   - platform: rpiswitch
-    scan_interval: 5
+    scan_interval: 10
     pin: 18
     channel: 1
     name: "Corridor Light Switch"
     voltage: 225
-    samples: 100
-    gain: 1
     pf: 0.6
+    invert_logic: false
 
   - platform: rpiswitch
-    scan_interval: 5
+    scan_interval: 10
     pin: 22
     channel: 0
     name: "Kitchen Light Switch"
     voltage: 225
-    samples: 100
-    gain: 1
     pf: 0.6
+    invert_logic: false
 
 sensor:
   - platform: template

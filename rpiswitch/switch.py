@@ -1,4 +1,10 @@
+import voluptuous as vol
+
 from homeassistant.components.switch import SwitchEntity
+from homeassistant.components.switch import PLATFORM_SCHEMA
+
+from homeassistant.const import DEVICE_DEFAULT_NAME
+import homeassistant.helpers.config_validation as cv
 
 import board
 import busio
@@ -9,27 +15,57 @@ import numpy as np
 import math
 import RPi.GPIO as GPIO
 
+DEFAULT_VOLTAGE = 230
+DEFAULT_SAMPLES = 100
+DEFAULT_GAIN = 1
+DEFAULT_PF = 1
+DEFAULT_INVERT_LOGIC = False
+
+CONF_PIN = "pin"
+CONF_CHANNEL = "channel"
+CONF_NAME = "name"
+CONF_VOLTAGE = "voltage"
+CONF_SAMPLES = "samples"
+CONF_GAIN = "gain"
+CONF_PF = "pf"
+CONF_INVERT_LOGIC = "invert_logic"
+
+PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
+    {
+        vol.Required(CONF_PIN): cv.positive_int,
+        vol.Required(CONF_CHANNEL): vol.In([0, 1, 2, 3]),
+        vol.Required(CONF_NAME): cv.string,
+        vol.Optional(CONF_VOLTAGE, default=DEFAULT_VOLTAGE): cv.positive_int,
+        vol.Optional(CONF_SAMPLES, default=DEFAULT_SAMPLES): cv.positive_int,
+        vol.Optional(CONF_GAIN, default=DEFAULT_GAIN): cv.positive_int,
+        vol.Optional(CONF_PF, default=DEFAULT_PF): cv.positive_float,
+        vol.Optional(CONF_INVERT_LOGIC, default=DEFAULT_INVERT_LOGIC): cv.boolean,
+    }
+)
+
 
 def setup_platform(hass, config, add_devices, discovery_info=None):
-    pin = config.get('pin')
-    channel = config.get('channel')
-    name = config.get('name')
-    voltage = config.get('voltage')
-    samples = config.get('samples')
-    gain = config.get('gain')
-    pf = config.get('pf')
-    add_devices([RPiSwitch(pin, channel, name, voltage, samples, gain, pf)])
+    pin = config.get(CONF_PIN)
+    channel = config.get(CONF_CHANNEL)
+    name = config.get(CONF_NAME)
+    voltage = config.get(CONF_VOLTAGE)
+    samples = config.get(CONF_SAMPLES)
+    gain = config.get(CONF_GAIN)
+    pf = config.get(CONF_PF)
+    invert_logic = config.get(CONF_INVERT_LOGIC)
+    add_devices([RPiSwitch(pin, channel, name, voltage, samples, gain, pf, invert_logic)])
 
 
 class RPiSwitch(SwitchEntity):
-    def __init__(self, pin, channel, name, voltage, samples, gain, pf):
+    def __init__(self, pin, channel, name, voltage, samples, gain, pf, invert_logic):
         self._pin = pin
         self._channel = channel
-        self._name = name
+        self._name = name or DEVICE_DEFAULT_NAME
         self._voltage = voltage
         self._samples = samples
         self._gain = gain
         self._pf = pf
+        self._invert_logic = invert_logic
 
         self._state = 0
         self._is_on = False
@@ -44,16 +80,25 @@ class RPiSwitch(SwitchEntity):
 
     async def async_turn_on(self, **kwargs):
         """Turn the entity on."""
-        GPIO.output(self._pin, GPIO.HIGH)
+        if self._invert_logic:
+            GPIO.output(self._pin, GPIO.LOW)
+        else:
+            GPIO.output(self._pin, GPIO.HIGH)
         self.update()
 
     async def async_turn_off(self, **kwargs):
         """Turn the entity off."""
-        GPIO.output(self._pin, GPIO.LOW)
+        if self._invert_logic:
+            GPIO.output(self._pin, GPIO.HIGH)
+        else:
+            GPIO.output(self._pin, GPIO.LOW)
         self.update()
 
     def update(self):
-        self._is_on = True if int(GPIO.input(self._pin)) == 1 else False
+        if self._invert_logic:
+            self._is_on = False if int(GPIO.input(self._pin)) == 1 else True
+        else:
+            self._is_on = True if int(GPIO.input(self._pin)) == 1 else False
 
         i2c = busio.I2C(board.SCL, board.SDA)
         ads = ads1115.ADS1115(i2c)
