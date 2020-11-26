@@ -33,6 +33,7 @@ sensor:
     sensors:
       room_light_switch_power:
         friendly_name: "Room light"
+        device_class: 'power'
         unit_of_measurement: 'W'
         value_template: >
           {% if states.switch.room_light_switch.attributes.current_power_w %}
@@ -45,6 +46,7 @@ sensor:
     sensors:
       corridor_light_switch_power:
         friendly_name: "Corridor light"
+        device_class: 'power'
         unit_of_measurement: 'W'
         value_template: >
           {% if states.switch.corridor_light_switch.attributes.current_power_w %}
@@ -57,6 +59,7 @@ sensor:
     sensors:
       kitchen_light_switch_power:
         friendly_name: "Kitchen light"
+        device_class: 'power'
         unit_of_measurement: 'W'
         value_template: >
           {% if states.switch.kitchen_light_switch.attributes.current_power_w %}
