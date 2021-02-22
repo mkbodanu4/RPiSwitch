@@ -119,7 +119,7 @@ class RPiSwitch(SwitchEntity):
 
     @property
     def current_power_w(self):
-        return 0.0 if math.isnan(self._watt) else float("{:.2f}".format(self._watt))
+        return 0.0 if math.isnan(self._watt) else float("{:.0f}".format(self._watt))
 
     @property
     def unit_of_measurement(self):
