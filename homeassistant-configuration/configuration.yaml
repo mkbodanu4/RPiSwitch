@@ -36,7 +36,7 @@ sensor:
         device_class: 'power'
         unit_of_measurement: 'W'
         value_template: >
-          {% if states.switch.room_light_switch.attributes.current_power_w %}
+          {% if "current_power_w" in states.switch.room_light_switch.attributes and states.switch.room_light_switch.attributes["current_power_w"] %}
             {{ state_attr('switch.room_light_switch', 'current_power_w') }}
           {% else %}
             0
@@ -49,7 +49,7 @@ sensor:
         device_class: 'power'
         unit_of_measurement: 'W'
         value_template: >
-          {% if states.switch.corridor_light_switch.attributes.current_power_w %}
+          {% if "current_power_w" in states.switch.corridor_light_switch.attributes and states.switch.corridor_light_switch.attributes["current_power_w"] %}
             {{ state_attr('switch.corridor_light_switch', 'current_power_w') }}
           {% else %}
             0
@@ -62,7 +62,7 @@ sensor:
         device_class: 'power'
         unit_of_measurement: 'W'
         value_template: >
-          {% if states.switch.kitchen_light_switch.attributes.current_power_w %}
+          {% if "current_power_w" in states.switch.kitchen_light_switch.attributes and states.switch.kitchen_light_switch.attributes["current_power_w"] %}
             {{ state_attr('switch.kitchen_light_switch', 'current_power_w') }}
           {% else %}
             0

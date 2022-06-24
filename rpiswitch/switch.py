@@ -73,6 +73,8 @@ class RPiSwitch(SwitchEntity):
         self._current_rms = 0
         self._watt = 0
 
+        self._busy = False
+
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self._pin, GPIO.OUT)
 
@@ -95,27 +97,31 @@ class RPiSwitch(SwitchEntity):
         self.update()
 
     def update(self):
-        if self._invert_logic:
-            self._is_on = False if int(GPIO.input(self._pin)) == 1 else True
-        else:
-            self._is_on = True if int(GPIO.input(self._pin)) == 1 else False
+        if not self._busy:
+            self._busy = True
+            if self._invert_logic:
+                self._is_on = False if int(GPIO.input(self._pin)) == 1 else True
+            else:
+                self._is_on = True if int(GPIO.input(self._pin)) == 1 else False
 
-        i2c = busio.I2C(board.SCL, board.SDA)
-        ads = ads1115.ADS1115(i2c)
-        ads.gain = 1
-        ads.mode = ads1115.Mode.CONTINUOUS
+            i2c = busio.I2C(board.SCL, board.SDA)
+            ads = ads1115.ADS1115(i2c)
+            ads.gain = 1
+            ads.mode = ads1115.Mode.CONTINUOUS
 
-        start = datetime.now().timestamp()
-        currents = []
-        times = []
-        while len(currents) < self._samples:
-            channel_data = AnalogIn(ads, int(self._channel))
-            currents.append((channel_data.voltage / 200) * 1000)
-            times.append(datetime.now().timestamp() - start)
+            start = datetime.now().timestamp()
+            currents = []
+            times = []
+            while len(currents) < self._samples:
+                channel_data = AnalogIn(ads, int(self._channel))
+                currents.append((channel_data.voltage / 200) * 1000)
+                times.append(datetime.now().timestamp() - start)
 
-        currents = np.array(currents)
-        self._current_rms = np.sqrt(np.mean(currents ** 2))
-        self._watt = (self._current_rms * 230) * self._pf
+            currents = np.array(currents)
+            self._current_rms = np.sqrt(np.mean(currents ** 2))
+            self._watt = (self._current_rms * 230) * self._pf
+
+            self._busy = False
 
     @property
     def current_power_w(self):
