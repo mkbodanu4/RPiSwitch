@@ -1,0 +1,11 @@
+{
+  "domain": "ads1115_power",
+  "name": "Home Assistant custom component that allows to measure power usage with ADS1115 ADC and TA12-100 Current Sensor",
+  "documentation": "https://github.com/mkbodanu4/RPiSwitch",
+  "version": "1.0.0",
+  "requirements": ["adafruit-circuitpython-ads1x15>=2.2.3", "numpy>=1.19.4"],
+  "dependencies": [],
+  "codeowners": [
+    "@mkbodanu4"
+  ]
+}

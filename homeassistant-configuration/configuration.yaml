@@ -2,68 +2,45 @@ switch:
   - platform: rpiswitch
     scan_interval: 10
     pin: 17
-    channel: 3
     name: "Room Light Switch"
-    voltage: 225
-    samples: 100
-    gain: 1
-    pf: 0.6
     invert_logic: false
 
   - platform: rpiswitch
     scan_interval: 10
     pin: 18
-    channel: 1
     name: "Corridor Light Switch"
-    voltage: 225
-    pf: 0.6
     invert_logic: false
 
   - platform: rpiswitch
     scan_interval: 10
     pin: 22
-    channel: 0
     name: "Kitchen Light Switch"
-    voltage: 225
-    pf: 0.6
     invert_logic: false
 
 sensor:
-  - platform: template
-    sensors:
-      room_light_switch_power:
-        friendly_name: "Room light"
-        device_class: 'power'
-        unit_of_measurement: 'W'
-        value_template: >
-          {% if "current_power_w" in states.switch.room_light_switch.attributes and states.switch.room_light_switch.attributes["current_power_w"] %}
-            {{ state_attr('switch.room_light_switch', 'current_power_w') }}
-          {% else %}
-            0
-          {% endif %}
+  - platform: ads1115_power
+    scan_interval: 10
+    channel: 3
+    name: "Room Light Switch Power"
+    voltage: 225
+    samples: 100
+    gain: 1
+    pf: 0.6
 
-  - platform: template
-    sensors:
-      corridor_light_switch_power:
-        friendly_name: "Corridor light"
-        device_class: 'power'
-        unit_of_measurement: 'W'
-        value_template: >
-          {% if "current_power_w" in states.switch.corridor_light_switch.attributes and states.switch.corridor_light_switch.attributes["current_power_w"] %}
-            {{ state_attr('switch.corridor_light_switch', 'current_power_w') }}
-          {% else %}
-            0
-          {% endif %}
+  - platform: ads1115_power
+    scan_interval: 10
+    channel: 1
+    name: "Corridor Light Switch Power"
+    voltage: 225
+    samples: 100
+    gain: 1
+    pf: 0.6
 
-  - platform: template
-    sensors:
-      kitchen_light_switch_power:
-        friendly_name: "Kitchen light"
-        device_class: 'power'
-        unit_of_measurement: 'W'
-        value_template: >
-          {% if "current_power_w" in states.switch.kitchen_light_switch.attributes and states.switch.kitchen_light_switch.attributes["current_power_w"] %}
-            {{ state_attr('switch.kitchen_light_switch', 'current_power_w') }}
-          {% else %}
-            0
-          {% endif %}
+  - platform: ads1115_power
+    scan_interval: 10
+    channel: 0
+    name: "Kitchen Light Switch Power"
+    voltage: 225
+    samples: 100
+    gain: 1
+    pf: 0.6
